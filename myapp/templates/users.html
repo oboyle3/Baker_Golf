@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users and Golfers</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.age }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Golfers</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Day 1 Score</th>
+                <th>Day 2 Score</th>
+                <th>Day 3 Score</th>
+                <th>Day 4 Score</th>
+                <th>Average Score</th>
+                <th>Tier</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for golfer in golfers %}
+                <tr>
+                    <td>{{ golfer.id }}</td>
+                    <td>{{ golfer.name }}</td>
+                    <td>{{ golfer.day_1_score }}</td>
+                    <td>{{ golfer.day_2_score }}</td>
+                    <td>{{ golfer.day_3_score }}</td>
+                    <td>{{ golfer.day_4_score }}</td>
+                    <td>{{ golfer.average_scores_dayoverday }}</td>
+                    <td>{{ golfer.tier }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
