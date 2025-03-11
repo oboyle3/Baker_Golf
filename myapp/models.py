@@ -21,3 +21,9 @@ class Golfer(models.Model):
 
     class Meta:
         db_table = "all_golfers"
+
+class UserGolfer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    golfer = models.ForeignKey(Golfer, on_delete=models.CASCADE)
+    class Meta:
+        db_table = "user_golfer"
