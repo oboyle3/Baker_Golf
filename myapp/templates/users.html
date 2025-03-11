@@ -53,6 +53,13 @@
                     <td>{{ golfer.day_4_score }}</td>
                     <td>{{ golfer.average_scores_dayoverday }}</td>
                     <td>{{ golfer.tier }}</td>
+                    <td>
+                        {% for user_golfer in user.usergolfer_set.all %}
+                            {{ user_golfer.golfer.name }}<br>
+                        {% empty %}
+                            No assigned golfer
+                        {% endfor %}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
