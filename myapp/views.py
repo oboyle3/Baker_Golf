@@ -7,3 +7,12 @@ def user_list(request):
     users_with_golfers = User.objects.prefetch_related('usergolfer_set')
     
     return render(request, 'users.html', {'users': users, 'golfers': golfers, 'users_with_golfers': users_with_golfers})  # Pass both users and golfers to the template
+
+
+def user_screen(request):
+    return render(request, "user_screen.html")  # This loads your template
+
+
+
+def users_page(request):
+    return render(request, "users.html")  # This loads users.html
