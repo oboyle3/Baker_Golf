@@ -11,5 +11,12 @@
     <p>hello
     </p>
     <a href="{% url 'user_list' %}">Go to users .html </a>
+    <h1>User Details</h1>
+<p><strong>ID:</strong> {{ user.id }}</p>
+<p><strong>Name:</strong> {{ user.username }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+
+<h2>Assigned Golfers</h2>
+
   </body>
 </html>
