@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import User, Golfer  # Import Golfer model
+from .models import User, Golfer, Car # Import Golfer model
 from django.shortcuts import render, get_object_or_404
 
 def user_list(request):
@@ -21,6 +21,12 @@ def users_page(request):
 
 
 
-def user_detail(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    return render(request, 'user_screen.html', {'user': user})
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'user_screen.html', {'user': users})
+
+
+
+def car_list(request):
+    cars = Car.objects.all()  # Fetch all cars from the database
+    return render(request, 'cars.html', {'cars': cars})

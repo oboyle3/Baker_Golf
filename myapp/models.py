@@ -27,3 +27,12 @@ class UserGolfer(models.Model):
     golfer = models.ForeignKey(Golfer, on_delete=models.CASCADE)
     class Meta:
         db_table = "user_golfer"
+
+
+class Car(models.Model):
+    make = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+    year = models.IntegerField()
+
+    class Meta:
+        db_table = "cars"  # Tell Django to use the existing table
