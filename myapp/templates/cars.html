@@ -46,11 +46,33 @@
                     <td>{{ car.id }}</td>
                     <td>{{ car.make }}</td>
                     <td>{{ car.model }}</td>
-                    <td>{{ car.year }}</td>
+                    <!-- <td>{{ car.year }}</td> -->
                 </tr>
                 {% empty %}
                 <tr>
                     <td colspan="4" class="text-center">No cars found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in Users %}
+                <tr>
+                    <td>{{ someuser.id }}</td>
+                    <td>{{ someuser.name }}</td>
+                    
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No user found</td>
                 </tr>
                 {% endfor %}
             </tbody>

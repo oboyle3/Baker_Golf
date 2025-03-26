@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import User, Golfer, Car # Import Golfer model
+from .models import User, Golfer, Car  # Import Golfer model
 from django.shortcuts import render, get_object_or_404
 
 def user_list(request):
@@ -30,3 +30,4 @@ def user_list(request):
 def car_list(request):
     cars = Car.objects.all()  # Fetch all cars from the database
     return render(request, 'cars.html', {'cars': cars})
+
