@@ -7,7 +7,7 @@ def user_list(request):
     golfers = Golfer.objects.all()  # Get all golfers from the database
     users_with_golfers = User.objects.prefetch_related('usergolfer_set')
     
-    return render(request, 'users.html', {'users': users, 'golfers': golfers, 'users_with_golfers': users_with_golfers})  # Pass both users and golfers to the template
+    return render(request, 'users.html', 'cars.html', {'users': users, 'golfers': golfers, 'users_with_golfers': users_with_golfers})  # Pass both users and golfers to the template
 
 
 def user_screen(request):
@@ -30,4 +30,10 @@ def user_list(request):
 def car_list(request):
     cars = Car.objects.all()  # Fetch all cars from the database
     return render(request, 'cars.html', {'cars': cars})
+
+
+
+def user_list(request):
+    users = User.objects.all()  # Fetch all users from the database
+    return render(request, "users.html", {"Users": users})  # Pass users as "Users"
 

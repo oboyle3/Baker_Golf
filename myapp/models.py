@@ -36,3 +36,4 @@ class Car(models.Model):
 
     class Meta:
         db_table = "cars"  # Tell Django to use the existing table
+
