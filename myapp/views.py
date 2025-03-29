@@ -1,39 +1,33 @@
-from django.shortcuts import render
-from .models import User, Golfer, Car  # Import Golfer model
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect
+from .models import User
+from django.contrib.auth import authenticate, login, logout
+from .forms import LoginForm
+from django.contrib.auth.decorators import login_required
 
-def user_list(request):
-    users = User.objects.all()  # Get all users from the database
-    golfers = Golfer.objects.all()  # Get all golfers from the database
-    users_with_golfers = User.objects.prefetch_related('usergolfer_set')
-    
-    return render(request, 'users.html', 'cars.html', {'users': users, 'golfers': golfers, 'users_with_golfers': users_with_golfers})  # Pass both users and golfers to the template
+def login_view(request):
+    if request.method == 'POST':
+        print(request.POST)  # This will print the POST data to the console
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)  # This is how authentication is done
+        if user is not None:
+            login(request, user)
+            return redirect('cars')  # Redirect to cars or user dashboard
+        else:
+            return render(request, 'login.html', {'error': 'Invalid email or password'})
 
+    return render(request, 'login.html')
 
-def user_screen(request):
-    return render(request, "user_screen.html")  # This loads your template
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Redirect back to the login page
 
-
-
-def users_page(request):
-    return render(request, "users.html")  # This loads users.html
-
-
-
-
-def user_list(request):
-    users = User.objects.all()
-    return render(request, 'user_screen.html', {'user': users})
-
-
-
-def car_list(request):
-    cars = Car.objects.all()  # Fetch all cars from the database
-    return render(request, 'cars.html', {'cars': cars})
+@login_required
+def cars_view(request):
+    return render(request, 'cars.html')
 
 
-
-def user_list(request):
-    users = User.objects.all()  # Fetch all users from the database
-    return render(request, "users.html", {"Users": users})  # Pass users as "Users"
+@login_required
+def cars_view(request):
+    return render(request, 'cars.html')
 
