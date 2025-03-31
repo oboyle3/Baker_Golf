@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Golfer
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
@@ -24,10 +24,13 @@ def logout_view(request):
 
 @login_required
 def cars_view(request):
+    context = {
+        'user': request.user  # Pass the logged-in user to the template
+    }
     return render(request, 'cars.html')
 
-
-@login_required
-def cars_view(request):
-    return render(request, 'cars.html')
+def car_list(request):
+    golfers = Golfer.objects.all()  # Fetch all golfers
+    print(golfers)  # This will print the queryset to the console/logs
+    return render(request, 'cars.html', {'golfers': golfers})
 

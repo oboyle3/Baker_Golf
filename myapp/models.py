@@ -51,3 +51,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = "all_users"
+
+
+
+class Golfer(models.Model):
+    name = models.CharField(max_length=100)
+    day_1_score = models.IntegerField()
+    day_2_score = models.IntegerField()
+    day_3_score = models.IntegerField()
+    day_4_score = models.IntegerField()
+    average_scores_dayoverday = models.FloatField(null=True, blank=True)
+    tier = models.IntegerField()
+    def __str__(self):
+        return self.name
+    class Meta:
+        db_table = "all_golfers"
