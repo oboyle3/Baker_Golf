@@ -22,15 +22,16 @@ def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect back to the login page
 
+
 @login_required
 def cars_view(request):
-    context = {
-        'user': request.user  # Pass the logged-in user to the template
-    }
-    return render(request, 'cars.html')
-
-def car_list(request):
     golfers = Golfer.objects.all()  # Fetch all golfers
-    print(golfers)  # This will print the queryset to the console/logs
-    return render(request, 'cars.html', {'golfers': golfers})
 
+    context = {
+        'user': request.user,  # Pass the logged-in user
+        'golfers': golfers  # Pass golfers to template
+    }
+
+    print("Golfers sent to template:", golfers)  # Debugging
+
+    return render(request, 'cars.html', context)

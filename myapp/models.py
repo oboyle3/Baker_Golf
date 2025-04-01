@@ -64,5 +64,6 @@ class Golfer(models.Model):
     tier = models.IntegerField()
     def __str__(self):
         return self.name
+    
     class Meta:
         db_table = "all_golfers"
