@@ -26,6 +26,7 @@ def logout_view(request):
 @login_required
 def cars_view(request):
     golfers = Golfer.objects.all()  # Fetch all golfers
+    #golfers = request.user.golfers.all()  # Many-to-many relationship from user to golfers
 
     context = {
         'user': request.user,  # Pass the logged-in user

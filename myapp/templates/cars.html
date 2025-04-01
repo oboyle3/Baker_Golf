@@ -30,8 +30,8 @@
             <div class="alert alert-info">
                 <p>Welcome, {{ user.name }}!</p>
                 <p>Email: {{ user.email }}</p>
-                <p>Is Staff: {{ user.is_staff }}</p>
-                <p>Is Superuser: {{ user.is_superuser }}</p>
+                <!-- <p>Is Staff: {{ user.is_staff }}</p> -->
+                <!-- <p>Is Superuser: {{ user.is_superuser }}</p> -->
             </div>
         {% else %}
             <div class="alert alert-warning">
@@ -42,20 +42,37 @@
        
         <!-- Golfers Table Section -->
         <h2 class="mb-4">Golfers</h2>
-        <table class="table table-bordered">
-            
-            <tbody>
-                {% for golfer in golfers %}
-                    <tr>
-                        <td>{{ golfer.name }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="8" class="text-center">No golfers found</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Day 1 Score</th>
+            <th>Day 2 Score</th>
+            <th>Day 3 Score</th>
+            <th>Day 4 Score</th>
+            <th>Average Score</th>
+            <th>Tier</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for golfer in golfers %}
+            <tr>
+                <td>{{ golfer.name }}</td>
+                <td>{{ golfer.day_1_score }}</td>
+                <td>{{ golfer.day_2_score }}</td>
+                <td>{{ golfer.day_3_score }}</td>
+                <td>{{ golfer.day_4_score }}</td>
+                <td>{{ golfer.average_scores_dayoverday|default:"N/A" }}</td>
+                <td>{{ golfer.tier }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No golfers found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
     </div>
 
     <!-- Logout Button -->
