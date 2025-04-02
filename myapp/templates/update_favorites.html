@@ -10,14 +10,14 @@
     <!-- Navigation Menu -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Demo Main Page</a>
+            <a class="navbar-brand" href="#">Demo User Selection page</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <!-- You can add more menu items here if needed -->
-                    <a href="{% url 'update_favorites' %}">Change Selection</a>
+                    <a href="{% url 'cars' %}">Main Page</a>
 
                 </ul>
             </div>
@@ -25,7 +25,7 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Welcome to the Baker Street</h1>
+        <h1>Change Chosen Golfers Page</h1>
 
         <!-- User Info Section -->
         {% if user.is_authenticated %}
@@ -41,40 +41,24 @@
             </div>
         {% endif %}
 
-       
-        <!-- Golfers Table Section -->
-        <h2 class="mb-4">Golfers</h2>
+        {% block content %}
+        <h2>Update Your Favorite Golfers</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            <label>Select your favorite golfers:</label><br>
+            {% for golfer in all_golfers %}
+                <input type="checkbox" name="golfers" value="{{ golfer.id }}"
+                {% if golfer in user.favorite_golfers.all %}checked{% endif %}> {{ golfer.name }} <br>
+            {% endfor %}
+            
+            <br>
+            <button type="submit">Save Changes</button>
+        </form>
         
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Day 1 Score</th>
-            <th>Day 2 Score</th>
-            <th>Day 3 Score</th>
-            <th>Day 4 Score</th>
-            <th>Average Score</th>
-            <th>Tier</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for golfer in golfers %}
-            <tr>
-                <td>{{ golfer.name }}</td>
-                <td>{{ golfer.day_1_score }}</td>
-                <td>{{ golfer.day_2_score }}</td>
-                <td>{{ golfer.day_3_score }}</td>
-                <td>{{ golfer.day_4_score }}</td>
-                <td>{{ golfer.average_scores_dayoverday|default:"N/A" }}</td>
-                <td>{{ golfer.tier }}</td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">No golfers found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        {% endblock %}
+        
+ 
     </div>
 
     <!-- Logout Button -->
