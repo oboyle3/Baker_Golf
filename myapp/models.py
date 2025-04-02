@@ -34,6 +34,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)  # Password will be hashed
     age = models.IntegerField()
+    # Many-to-Many relationship to Golfer
+    favorite_golfers = models.ManyToManyField("Golfer", related_name="fans", blank=True)
 
     # User authentication-related fields
     is_active = models.BooleanField(default=True)
@@ -67,3 +69,4 @@ class Golfer(models.Model):
     
     class Meta:
         db_table = "all_golfers"
+       
