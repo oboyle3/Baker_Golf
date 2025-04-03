@@ -10,15 +10,15 @@
     <!-- Navigation Menu -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Demo User Selection page</a>
+            <a class="navbar-brand" href="#">Update Page</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <!-- You can add more menu items here if needed -->
-                    <a href="{% url 'cars' %}">Main Page  </a>
-                    <a href="{% url 'updatepage' %}">Admin Update</a> 
+                    <a href="{% url 'cars' %}">Main Page</a> 
+                    <a href="{% url 'update_favorites' %}">Change Selection</a>
 
                 </ul>
             </div>
@@ -26,15 +26,14 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Change Chosen Golfers Page</h1>
+        <h1>Welcome to the Baker Street</h1>
 
         <!-- User Info Section -->
         {% if user.is_authenticated %}
             <div class="alert alert-info">
                 <p>Welcome, {{ user.name }}!</p>
                 <p>Email: {{ user.email }}</p>
-                <!-- <p>Is Staff: {{ user.is_staff }}</p> -->
-                <!-- <p>Is Superuser: {{ user.is_superuser }}</p> -->
+                
             </div>
         {% else %}
             <div class="alert alert-warning">
@@ -42,26 +41,8 @@
             </div>
         {% endif %}
 
-        {% block content %}
-        <h2>Update Your Favorite Golfers</h2>
-        <form method="post">
-            {% csrf_token %}
-            
-            <label>Select your favorite golfers:</label><br>
-            {% for golfer in all_golfers %}
-                <input type="checkbox" name="golfers" value="{{ golfer.id }}"
-                {% if golfer in user.favorite_golfers.all %}checked{% endif %}> {{ golfer.name }} <br>
-            {% endfor %}
-            
-            <br>
-            <button type="submit">Save Changes</button>
-        </form>
+       
         
-        {% endblock %}
-        
- 
-    </div>
-
     <!-- Logout Button -->
     <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}

@@ -56,3 +56,8 @@ def update_favorite_golfers(request):
             return redirect('update_favorites')
 
     return render(request, 'update_favorites.html', {'all_golfers': all_golfers, 'user': user})
+
+
+@login_required
+def updatepage(request):
+    return render(request, 'updatepage.html')  # Make sure 'blank.html' exists

@@ -3,6 +3,7 @@ from . import views
 from .views import login_view, logout_view
 from .views import cars_view # Import the view function
 from .views import update_favorite_golfers
+from .views import updatepage
 urlpatterns = [
     
    
@@ -10,5 +11,6 @@ urlpatterns = [
     path('update-favorites/', update_favorite_golfers, name='update_favorites'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
+    path('updatepage/', updatepage, name='updatepage'),
     
 ]
