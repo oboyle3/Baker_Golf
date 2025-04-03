@@ -40,22 +40,50 @@ def cars_view(request):
     return render(request, 'cars.html', context)
 
 
+# @login_required
+# def update_favorite_golfers(request):
+#     user = request.user
+#     all_golfers = Golfer.objects.all()  # Fetch all golfers
+
+#     if request.method == "POST":
+#         selected_golfers = request.POST.getlist('golfers')  # Get selected golfer IDs
+        
+#         if len(selected_golfers) > 5:  # Restrict to 5 golfers
+#             messages.error(request, "You can only select up to 5 golfers.")
+#         else:
+#             user.favorite_golfers.set(selected_golfers)  # Update user's favorite golfers
+#             messages.success(request, "Favorite golfers updated successfully!")
+#             return redirect('update_favorites')
+
+#     return render(request, 'update_favorites.html', {'all_golfers': all_golfers, 'user': user})
 @login_required
 def update_favorite_golfers(request):
     user = request.user
-    all_golfers = Golfer.objects.all()  # Fetch all golfers
+    golfers_by_tier = {}
+
+    # Group golfers by tier
+    for golfer in Golfer.objects.all():
+        if golfer.tier not in golfers_by_tier:
+            golfers_by_tier[golfer.tier] = []
+        golfers_by_tier[golfer.tier].append(golfer)
 
     if request.method == "POST":
-        selected_golfers = request.POST.getlist('golfers')  # Get selected golfer IDs
+        selected_golfers = []
         
-        if len(selected_golfers) > 5:  # Restrict to 5 golfers
-            messages.error(request, "You can only select up to 5 golfers.")
+        # Extract one selected golfer per tier
+        for tier in golfers_by_tier.keys():
+            golfer_id = request.POST.get(f"tier_{tier}")
+            if golfer_id:
+                selected_golfers.append(golfer_id)
+
+        if len(selected_golfers) != 3:  # Ensure exactly 3 golfers are selected
+            messages.error(request, "You must select exactly one golfer per tier.")
         else:
             user.favorite_golfers.set(selected_golfers)  # Update user's favorite golfers
             messages.success(request, "Favorite golfers updated successfully!")
             return redirect('update_favorites')
 
-    return render(request, 'update_favorites.html', {'all_golfers': all_golfers, 'user': user})
+    return render(request, 'update_favorites.html', {'golfers_by_tier': golfers_by_tier, 'user': user})
 
 
 @login_required

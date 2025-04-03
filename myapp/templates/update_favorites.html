@@ -44,21 +44,45 @@
 
         {% block content %}
         <h2>Update Your Favorite Golfers</h2>
-        <form method="post">
+        <p>Select your favorite golfers by tier (one golfer per tier).</p>
+        
+        <form method="POST">
             {% csrf_token %}
             
-            <label>Select your favorite golfers:</label><br>
-            {% for golfer in all_golfers %}
-                <input type="checkbox" name="golfers" value="{{ golfer.id }}"
-                {% if golfer in user.favorite_golfers.all %}checked{% endif %}> {{ golfer.name }} <br>
+            {% for tier, golfers in golfers_by_tier.items %}
+                <h3>Tier {{ tier }}</h3>
+                {% for golfer in golfers %}
+                    <label>
+                        <input type="radio" name="tier_{{ tier }}" value="{{ golfer.id }}" class="golfer-checkbox">
+                        {{ golfer.name }}
+                    </label><br>
+                {% endfor %}
             {% endfor %}
-            
+        
             <br>
-            <button type="submit">Save Changes</button>
+            <button type="submit" id="save-btn" disabled>Save Changes</button>
         </form>
         
-        {% endblock %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const saveButton = document.getElementById("save-btn");
+                const tiers = document.querySelectorAll("h3"); // Count number of tiers
         
+                function checkSelection() {
+                    let selectedTiers = new Set();
+                    document.querySelectorAll("input[type=radio]:checked").forEach(input => {
+                        selectedTiers.add(input.name);
+                    });
+        
+                    saveButton.disabled = selectedTiers.size !== tiers.length; // Enable only when all tiers are selected
+                }
+        
+                document.querySelectorAll("input[type=radio]").forEach(input => {
+                    input.addEventListener("change", checkSelection);
+                });
+            });
+        </script>
+        {% endblock %}
  
     </div>
 
