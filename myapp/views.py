@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import User, Golfer
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm
+#from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
+from .forms import SignUpForm
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -40,22 +43,7 @@ def cars_view(request):
     return render(request, 'cars.html', context)
 
 
-# @login_required
-# def update_favorite_golfers(request):
-#     user = request.user
-#     all_golfers = Golfer.objects.all()  # Fetch all golfers
 
-#     if request.method == "POST":
-#         selected_golfers = request.POST.getlist('golfers')  # Get selected golfer IDs
-        
-#         if len(selected_golfers) > 5:  # Restrict to 5 golfers
-#             messages.error(request, "You can only select up to 5 golfers.")
-#         else:
-#             user.favorite_golfers.set(selected_golfers)  # Update user's favorite golfers
-#             messages.success(request, "Favorite golfers updated successfully!")
-#             return redirect('update_favorites')
-
-#     return render(request, 'update_favorites.html', {'all_golfers': all_golfers, 'user': user})
 @login_required
 def update_favorite_golfers(request):
     user = request.user
@@ -89,3 +77,16 @@ def update_favorite_golfers(request):
 @login_required
 def updatepage(request):
     return render(request, 'updatepage.html')  # Make sure 'blank.html' exists
+
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Optionally log them in right away
+            return redirect('cars')  # Replace with your actual post-signup page
+    else:
+        form = SignUpForm()
+    
+    return render(request, 'signup.html', {'form': form})

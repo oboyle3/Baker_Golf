@@ -1,8 +1,39 @@
-#Now, create a login form using Django’s built-in authentication system.
+# from django import forms
+# from .models import User
 
+# class SignUpForm(forms.ModelForm):
+#     password = forms.CharField(widget=forms.PasswordInput)
+
+#     class Meta:
+#         model = User
+#         fields = ['name', 'email', 'age', 'password']
+
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.set_password(self.cleaned_data['password'])  # Hash password
+#         if commit:
+#             user.save()
+#         return user
+from .models import User, Golfer, AllUsersFavoriteGolfers
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+class SignUpForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    
+    class Meta:
+        model = User
+        fields = ['name', 'email', 'age', 'password']
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])  # Hash password
+        if commit:
+            user.save()
 
-class LoginForm(AuthenticationForm):
-    username = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+        # Manually specify the golfer IDs you want to assign (IDs 1, 4, 5, 10)
+        default_golfer_ids = [1, 4, 5, 10]
+
+        # Loop through the golfer IDs and create entries in the favorite golfers table
+        for golfer_id in default_golfer_ids:
+            AllUsersFavoriteGolfers.objects.create(user_id=user.id, golfer_id=golfer_id)
+        
+        return user

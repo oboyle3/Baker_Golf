@@ -35,7 +35,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=255)  # Password will be hashed
     age = models.IntegerField()
     # Many-to-Many relationship to Golfer
-    favorite_golfers = models.ManyToManyField("Golfer", related_name="fans", blank=True)
+    #favorite_golfers = models.ManyToManyField("Golfer", related_name="fans", blank=True)
+        # Many-to-Many relationship to Golfer with a custom intermediary table
+    favorite_golfers = models.ManyToManyField(
+        "Golfer", 
+        related_name="fans", 
+        blank=True,
+        through="AllUsersFavoriteGolfers"
+    )
+
 
     # User authentication-related fields
     is_active = models.BooleanField(default=True)
@@ -69,4 +77,12 @@ class Golfer(models.Model):
     
     class Meta:
         db_table = "all_golfers"
-       
+        
+
+#added
+class AllUsersFavoriteGolfers(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)  # Linking to User
+    golfer = models.ForeignKey('Golfer', on_delete=models.CASCADE)  # Linking to Golfer
+
+    class Meta:
+        db_table = 'all_users_favorite_golfers'  # Specify table name if needed
