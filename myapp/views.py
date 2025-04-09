@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import User, Golfer
+from .models import User, Golfer , AllUsersFavoriteGolfers
 from django.contrib.auth import authenticate, login, logout
 #from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .forms import SignUpForm
+from .forms import FavoriteGolfersForm, SignUpForm
 
 
 def login_view(request):
@@ -44,34 +44,72 @@ def cars_view(request):
 
 
 
-@login_required
+# @login_required
+# def update_favorite_golfers(request):
+#     user = request.user
+#     golfers_by_tier = {}
+
+#     # Group golfers by tier
+#     for golfer in Golfer.objects.all():
+#         golfers_by_tier.setdefault(golfer.tier, []).append(golfer)
+
+#     if request.method == "POST":
+#         selected_golfers = []
+
+#         # Collect the selected golfer IDs
+#         for tier in golfers_by_tier.keys():
+#             golfer_id = request.POST.get(f"tier_{tier}")
+#             if golfer_id:
+#                 selected_golfers.append(int(golfer_id))
+
+#         print("Selected golfer IDs:", selected_golfers)
+#         print("User ID:", user.id)
+
+#         if len(selected_golfers) != 3:
+#             messages.error(request, "You must select exactly one golfer per tier.")
+#         else:
+#             # Before creating, let's clear existing favorite golfers from the intermediary table
+#             print("Clearing existing favorite golfers for user:", user.id)
+#             AllUsersFavoriteGolfers.objects.filter(user=user).delete()
+#             print("Old favorites cleared.")
+
+#             # Add the new selected golfers to the intermediary table
+#             for golfer_id in selected_golfers:
+#                 print(f"Creating new favorite for golfer_id: {golfer_id} and user_id: {user.id}")
+#                 AllUsersFavoriteGolfers.objects.create(user=user, golfer_id=golfer_id)
+            
+#             print("New favorites added.")
+
+#             messages.success(request, "Favorite golfers updated successfully!")
+#             return redirect("update_favorites")
+
+#     return render(request, "update_favorites.html", {"golfers_by_tier": golfers_by_tier, "user": user})
+@login_required  # Ensure the user is logged in
 def update_favorite_golfers(request):
+    # Get the current user
     user = request.user
-    golfers_by_tier = {}
 
-    # Group golfers by tier
-    for golfer in Golfer.objects.all():
-        if golfer.tier not in golfers_by_tier:
-            golfers_by_tier[golfer.tier] = []
-        golfers_by_tier[golfer.tier].append(golfer)
+    # Check if the user is making a POST request to update favorites
+    if request.method == 'POST':
+        form = FavoriteGolfersForm(request.POST)
 
-    if request.method == "POST":
-        selected_golfers = []
-        
-        # Extract one selected golfer per tier
-        for tier in golfers_by_tier.keys():
-            golfer_id = request.POST.get(f"tier_{tier}")
-            if golfer_id:
-                selected_golfers.append(golfer_id)
+        if form.is_valid():
+            # Get the selected golfers
+            selected_golfers = form.cleaned_data['golfers']
 
-        if len(selected_golfers) != 3:  # Ensure exactly 3 golfers are selected
-            messages.error(request, "You must select exactly one golfer per tier.")
-        else:
-            user.favorite_golfers.set(selected_golfers)  # Update user's favorite golfers
-            messages.success(request, "Favorite golfers updated successfully!")
-            return redirect('update_favorites')
+            # Update the user's favorite golfers (this clears previous selections)
+            user.favorite_golfers.set(selected_golfers)
+            user.save()
 
-    return render(request, 'update_favorites.html', {'golfers_by_tier': golfers_by_tier, 'user': user})
+            # Redirect to a success page or the same page
+            return redirect('update_favorite_golfers')  # Can redirect to a success page
+
+    else:
+        # Initialize the form with the user's current favorite golfers
+        initial_golfers = user.favorite_golfers.all()
+        form = FavoriteGolfersForm(initial={'golfers': initial_golfers})
+
+    return render(request, 'update_favorites.html', {'form': form})
 
 
 @login_required

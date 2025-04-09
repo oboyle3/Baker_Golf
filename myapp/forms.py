@@ -37,3 +37,4 @@ class SignUpForm(forms.ModelForm):
             AllUsersFavoriteGolfers.objects.create(user_id=user.id, golfer_id=golfer_id)
         
         return user
+

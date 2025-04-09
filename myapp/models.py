@@ -72,13 +72,30 @@ class Golfer(models.Model):
     day_4_score = models.IntegerField()
     average_scores_dayoverday = models.FloatField(null=True, blank=True)
     tier = models.IntegerField()
+
     def __str__(self):
         return self.name
-    
+
+    # def calculate_average(self):
+    #     # Collect all the scores into a list
+    #     scores = [self.day_1_score, self.day_2_score, self.day_3_score, self.day_4_score]
+        
+    #     # Filter out the None values and calculate the average
+    #     valid_scores = [score for score in scores if score is not None]
+    #     if valid_scores:
+    #         # If there are valid scores, calculate the average
+    #         return sum(valid_scores) / len(valid_scores)
+    #     else:
+    #         # If there are no valid scores, return None
+    #         return None
+
+    # def save(self, *args, **kwargs):
+    #     # Automatically calculate the average when saving the golfer
+    #     self.average_scores_dayoverday = self.calculate_average()
+    #     super().save(*args, **kwargs)
+
     class Meta:
         db_table = "all_golfers"
-        
-
 #added
 class AllUsersFavoriteGolfers(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)  # Linking to User
