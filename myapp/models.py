@@ -64,6 +64,38 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 
+# class Golfer(models.Model):
+#     name = models.CharField(max_length=100)
+#     day_1_score = models.IntegerField()
+#     day_2_score = models.IntegerField()
+#     day_3_score = models.IntegerField()
+#     day_4_score = models.IntegerField()
+#     average_scores_dayoverday = models.FloatField(null=True, blank=True)
+#     tier = models.IntegerField()
+
+#     def __str__(self):
+#         return self.name
+
+#     # def calculate_average(self):
+#     #     # Collect all the scores into a list
+#     #     scores = [self.day_1_score, self.day_2_score, self.day_3_score, self.day_4_score]
+        
+#     #     # Filter out the None values and calculate the average
+#     #     valid_scores = [score for score in scores if score is not None]
+#     #     if valid_scores:
+#     #         # If there are valid scores, calculate the average
+#     #         return sum(valid_scores) / len(valid_scores)
+#     #     else:
+#     #         # If there are no valid scores, return None
+#     #         return None
+
+#     # def save(self, *args, **kwargs):
+#     #     # Automatically calculate the average when saving the golfer
+#     #     self.average_scores_dayoverday = self.calculate_average()
+#     #     super().save(*args, **kwargs)
+
+#     class Meta:
+#         db_table = "all_golfers"
 class Golfer(models.Model):
     name = models.CharField(max_length=100)
     day_1_score = models.IntegerField()
@@ -76,23 +108,21 @@ class Golfer(models.Model):
     def __str__(self):
         return self.name
 
-    # def calculate_average(self):
-    #     # Collect all the scores into a list
-    #     scores = [self.day_1_score, self.day_2_score, self.day_3_score, self.day_4_score]
-        
-    #     # Filter out the None values and calculate the average
-    #     valid_scores = [score for score in scores if score is not None]
-    #     if valid_scores:
-    #         # If there are valid scores, calculate the average
-    #         return sum(valid_scores) / len(valid_scores)
-    #     else:
-    #         # If there are no valid scores, return None
-    #         return None
+    def calculate_average_over_par(self):
+        # Assuming par is 72 for each round
+        par = 72
 
-    # def save(self, *args, **kwargs):
-    #     # Automatically calculate the average when saving the golfer
-    #     self.average_scores_dayoverday = self.calculate_average()
-    #     super().save(*args, **kwargs)
+        # Get the scores for each day
+        scores = [self.day_1_score, self.day_2_score, self.day_3_score, self.day_4_score]
+
+        # Calculate over par for each score
+        over_par_scores = [score - par for score in scores if score is not None]
+
+        # Calculate the average over par
+        if over_par_scores:
+            return sum(over_par_scores) / len(over_par_scores)
+        else:
+            return None
 
     class Meta:
         db_table = "all_golfers"

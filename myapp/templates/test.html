@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car List</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom styling for the top section display */
+        .golfers-summary {
+            font-size: 0.9rem; /* Slightly smaller text */
+            text-align: right; /* Align to the right */
+            color: #fff; /* White text color */
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark background for contrast */
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Menu -->
@@ -17,52 +27,84 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- You can add more menu items here if needed -->
-                    <!-- <a href="{% url 'update_favorites' %}">Change Selection  </a> -->
-                    <a href="{% url 'cars' %}">main</a> 
-
+                    <a href="{% url 'cars' %}">Main</a>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        
-
-        {% block content %}
-    <h2>Your Favorite Golfers</h2>
-    
-    <!-- Display current favorite golfers -->
-    <ul>
-        {% for entry in favorites %}
-            <li>
-                {{ entry.golfer.name }} | Tier: {{ entry.golfer.tier }}
-                <input type="radio" name="tier_{{ entry.golfer.tier }}" value="{{ entry.golfer.id }}" checked disabled>
-            </li>
-        {% empty %}
-            <li>You havent picked any favorite golfers yet.</li>
-        {% endfor %}
-    </ul>
-    
-    <h3>Select Your Favorite Golfers (One per Tier)</h3>
-    <form method="POST">
-        {% csrf_token %}
-        {% for tier in golfers_by_tier %}
-            <h4>Tier {{ tier.0 }}</h4>
-            {% for golfer in tier.1 %}
-                <label>
-                    <input type="radio" name="tier_{{ tier.0 }}" value="{{ golfer.id }}" 
-                        {% if golfer.id in selected_golfers %}
-                            checked
-                        {% endif %}>
-                    {{ golfer.name }} | Tier: {{ golfer.tier }}
-                </label><br>
+    <!-- Golfers Summary in the Top Section -->
+    <div class="container mt-3 golfers-summary">
+        <p>
+            <strong>Your Selected Golfers' Average Over Par:</strong><br>
+            {% for item in golfers_with_avg_over_par %}
+                {{ item.golfer.name }} | Average Over Par: 
+                {% if item.avg_over_par %}
+                    {{ item.avg_over_par }}
+                {% else %}
+                    No scores available
+                {% endif %}
+                <br>
             {% endfor %}
-        {% endfor %}
-        <button type="submit">Update Favorites</button>
-    </form>
-    
-    {% endblock %}
+            <strong>Overall Average Over Par for Selected Golfers: {{ overall_avg_over_par }}</strong>
+        </p>
+    </div>
+
+    <div class="container mt-5">
+        {% block content %}
+        <!-- <h2>Your Favorite Golfers</h2>
+
+        <p>Here are your selected golfers with their average over par:</p>
+
+        <ul>
+            {% for item in golfers_with_avg_over_par %}
+                <li>
+                    {{ item.golfer.name }} | Average Over Par: 
+                    {% if item.avg_over_par %}
+                        {{ item.avg_over_par }}
+                    {% else %}
+                        No scores available
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if overall_avg_over_par %}
+            <h3>Overall Average Over Par for Selected Golfers: {{ overall_avg_over_par }}</h3>
+        {% else %}
+            <h3>No valid golfers selected or no scores available.</h3>
+        {% endif %} -->
+
+        <ul>
+            {% for entry in favorites %}
+                <li>
+                    {{ entry.golfer.name }} | Tier: {{ entry.golfer.tier }}
+                    <input type="radio" name="tier_{{ entry.golfer.tier }}" value="{{ entry.golfer.id }}" checked disabled>
+                </li>
+            {% empty %}
+                <li>You haven't picked any favorite golfers yet.</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Select Your Favorite Golfers (One per Tier)</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {% for tier in golfers_by_tier %}
+                <h4>Tier {{ tier.0 }}</h4>
+                {% for golfer in tier.1 %}
+                    <label>
+                        <input type="radio" name="tier_{{ tier.0 }}" value="{{ golfer.id }}" 
+                            {% if golfer.id in selected_golfers %}
+                                checked
+                            {% endif %}>
+                        {{ golfer.name }} | Tier: {{ golfer.tier }}
+                    </label><br>
+                {% endfor %}
+            {% endfor %}
+            <button type="submit">Update Favorites</button>
+        </form>
+
+        {% endblock %}
     </div>
 
     <!-- Logout Button -->
