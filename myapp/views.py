@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import User, Golfer , AllUsersFavoriteGolfers
 from django.contrib.auth import authenticate, login, logout
-#from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -42,48 +41,6 @@ def cars_view(request):
 
     return render(request, 'cars.html', context)
 
-
-
-# @login_required
-# def update_favorite_golfers(request):
-#     user = request.user
-#     golfers_by_tier = {}
-
-#     # Group golfers by tier
-#     for golfer in Golfer.objects.all():
-#         golfers_by_tier.setdefault(golfer.tier, []).append(golfer)
-
-#     if request.method == "POST":
-#         selected_golfers = []
-
-#         # Collect the selected golfer IDs
-#         for tier in golfers_by_tier.keys():
-#             golfer_id = request.POST.get(f"tier_{tier}")
-#             if golfer_id:
-#                 selected_golfers.append(int(golfer_id))
-
-#         print("Selected golfer IDs:", selected_golfers)
-#         print("User ID:", user.id)
-
-#         if len(selected_golfers) != 3:
-#             messages.error(request, "You must select exactly one golfer per tier.")
-#         else:
-#             # Before creating, let's clear existing favorite golfers from the intermediary table
-#             print("Clearing existing favorite golfers for user:", user.id)
-#             AllUsersFavoriteGolfers.objects.filter(user=user).delete()
-#             print("Old favorites cleared.")
-
-#             # Add the new selected golfers to the intermediary table
-#             for golfer_id in selected_golfers:
-#                 print(f"Creating new favorite for golfer_id: {golfer_id} and user_id: {user.id}")
-#                 AllUsersFavoriteGolfers.objects.create(user=user, golfer_id=golfer_id)
-            
-#             print("New favorites added.")
-
-#             messages.success(request, "Favorite golfers updated successfully!")
-#             return redirect("update_favorites")
-
-#     return render(request, "update_favorites.html", {"golfers_by_tier": golfers_by_tier, "user": user})
 @login_required  # Ensure the user is logged in
 def update_favorite_golfers(request):
     # Get the current user
@@ -128,3 +85,55 @@ def signup_view(request):
         form = SignUpForm()
     
     return render(request, 'signup.html', {'form': form})
+
+
+
+# @login_required
+# def test_view(request):
+#     # Filter the table by logged-in user
+#     favorite_entries = AllUsersFavoriteGolfers.objects.filter(user=request.user).select_related('golfer')
+
+#     context = {
+#         'favorites': favorite_entries
+#     }
+
+#     return render(request, 'test.html', context)
+@login_required
+def test_view(request):
+    # Get all golfers and group them by tier
+    golfers = Golfer.objects.all()
+    golfers_by_tier = golfers.order_by('tier')  # Order golfers by tier
+    golfers_by_tier = [
+        (tier, golfers.filter(tier=tier)) for tier in golfers.values_list('tier', flat=True).distinct()
+    ]
+    
+    # Get the current favorite golfers for the user
+    current_favorites = AllUsersFavoriteGolfers.objects.filter(user=request.user)
+    selected_golfers = [entry.golfer.id for entry in current_favorites]
+
+    # Handle form submission to update favorites
+    if request.method == 'POST':
+        # Get selected golfers from the form (one per tier)
+        selected_golfers_from_form = {
+            key.split('_')[1]: value
+            for key, value in request.POST.items()
+            if key.startswith('tier_')
+        }
+        
+        # Remove all current favorite golfers for the user
+        AllUsersFavoriteGolfers.objects.filter(user=request.user).delete()
+        
+        # Add the new selected golfers to the user's favorites
+        for tier, golfer_id in selected_golfers_from_form.items():
+            golfer = Golfer.objects.get(id=golfer_id)
+            AllUsersFavoriteGolfers.objects.create(user=request.user, golfer=golfer)
+
+        return redirect('cars')  # Redirect to refresh the page with the updated favorites
+
+    context = {
+        'favorites': current_favorites,
+        'golfers_by_tier': golfers_by_tier,
+        'selected_golfers': selected_golfers,
+    }
+
+    return render(request, 'test.html', context)

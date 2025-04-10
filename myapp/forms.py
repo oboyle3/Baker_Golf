@@ -38,3 +38,10 @@ class SignUpForm(forms.ModelForm):
         
         return user
 
+
+class FavoriteGolfersForm(forms.Form):
+    golfers = forms.ModelMultipleChoiceField(
+        queryset=Golfer.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
