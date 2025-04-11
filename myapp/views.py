@@ -183,6 +183,7 @@ def signup_view(request):
 #     }
 
 #     return render(request, 'test.html', context)
+
 @login_required
 def test_view(request):
     # Get all golfers and group them by tier

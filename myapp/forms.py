@@ -30,7 +30,7 @@ class SignUpForm(forms.ModelForm):
             user.save()
 
         # Manually specify the golfer IDs you want to assign (IDs 1, 4, 5, 10)
-        default_golfer_ids = [1, 4, 5, 10]
+        default_golfer_ids = [11, 25, 37, 48]
 
         # Loop through the golfer IDs and create entries in the favorite golfers table
         for golfer_id in default_golfer_ids:

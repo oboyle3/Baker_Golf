@@ -18,7 +18,9 @@
                 <ul class="navbar-nav">
                     <!-- You can add more menu items here if needed -->
                     <!-- <a href="{% url 'update_favorites' %}">Change Selection  </a> -->
-                    <a href="{% url 'test' %}">test</a> 
+                    <a href="{% url 'test' %}">Change selections</a> 
+                    <h6>Leaders:Bman</h6>
+                    <h6>Leaders:Jack</h6>
 
                 </ul>
             </div>
@@ -26,13 +28,16 @@
     </nav>
 
     <div class="container mt-5">
-        
+        <h6>Leaders:Bman</h6>
+                    <h6>Leaders:Jack</h6>
+
 
         <!-- User Info Section -->
         {% if user.is_authenticated %}
             <div class="alert alert-info">
                 <p>Welcome, {{ user.name }}!</p>
                 <p>Email: {{ user.email }}</p>
+                
                 <!-- <p>Is Staff: {{ user.is_staff }}</p> -->
                 <!-- <p>Is Superuser: {{ user.is_superuser }}</p> -->
             </div>
