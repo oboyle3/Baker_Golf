@@ -215,7 +215,7 @@ def test_view(request):
             AllUsersFavoriteGolfers.objects.create(user=request.user, golfer=golfer)
 
         # Redirect to the same page after updating
-        return redirect('test_view')
+        return redirect('cars')
 
     # Add average over par calculation for selected golfers
     golfers_with_avg_over_par = [
@@ -245,8 +245,8 @@ def test_view(request):
 
 @login_required
 def leaderboard_view(request):
-    # Fetch UserAverage entries and join with the related User objects
-    leaderboard = UserAverage.objects.select_related('user').order_by('overall_avg_over_par')
+    
+    leaderboard = UserAverage.objects.all().order_by('overall_avg_over_par')
 
     context = {
         'leaderboard': leaderboard,

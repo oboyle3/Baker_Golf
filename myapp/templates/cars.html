@@ -16,11 +16,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <!-- You can add more menu items here if needed -->
-                    <!-- <a href="{% url 'update_favorites' %}">Change Selection  </a> -->
-                    <a href="{% url 'test' %}">Change selections</a> 
-                    <h6>Leaders:Bman</h6>
-                    <h6>Leaders:Jack</h6>
+                    <a class="nav-link" href="{% url 'test' %}">Change selections</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'leaderboard_view' %}">Leaderboard</a>
 
                 </ul>
             </div>
@@ -28,8 +27,7 @@
     </nav>
 
     <div class="container mt-5">
-        <h6>Leaders:Bman</h6>
-                    <h6>Leaders:Jack</h6>
+       
 
 
         <!-- User Info Section -->
