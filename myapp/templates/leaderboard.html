@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <h1>Leaderboard</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Overall Average Over Par</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in leaderboard %}
+          <tr>
+            <td>{{ entry.user.name }}</td>  <!-- Or use 'name' if your user model has that instead -->
+            <td>{{ entry.overall_avg_over_par }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</html>

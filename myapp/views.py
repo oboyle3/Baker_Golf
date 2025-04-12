@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import User, Golfer , AllUsersFavoriteGolfers
+from .models import User, Golfer , AllUsersFavoriteGolfers, UserAverage
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -214,8 +214,8 @@ def test_view(request):
             golfer = Golfer.objects.get(id=golfer_id)
             AllUsersFavoriteGolfers.objects.create(user=request.user, golfer=golfer)
 
-        # Redirect to the cars page after updating
-        return redirect('cars')
+        # Redirect to the same page after updating
+        return redirect('test_view')
 
     # Add average over par calculation for selected golfers
     golfers_with_avg_over_par = [
@@ -228,6 +228,11 @@ def test_view(request):
     if valid_averages:
         overall_avg_over_par = sum(valid_averages) / len(valid_averages)
 
+    # Save the overall average to UserAverage model
+    user_average, created = UserAverage.objects.get_or_create(user=request.user)
+    user_average.overall_avg_over_par = overall_avg_over_par
+    user_average.save()
+
     context = {
         'favorites': current_favorites,
         'golfers_by_tier': golfers_by_tier,
@@ -237,3 +242,13 @@ def test_view(request):
     }
 
     return render(request, 'test.html', context)
+
+@login_required
+def leaderboard_view(request):
+    # Fetch UserAverage entries and join with the related User objects
+    leaderboard = UserAverage.objects.select_related('user').order_by('overall_avg_over_par')
+
+    context = {
+        'leaderboard': leaderboard,
+    }
+    return render(request, 'leaderboard.html', context)

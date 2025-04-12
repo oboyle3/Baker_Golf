@@ -133,3 +133,14 @@ class AllUsersFavoriteGolfers(models.Model):
 
     class Meta:
         db_table = 'all_users_favorite_golfers'  # Specify table name if needed
+
+
+class UserAverage(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    overall_avg_over_par = models.FloatField(null=True, blank=True)
+
+    # def __str__(self):
+    #     return f"{self.user.username} - {self.overall_avg_over_par}"
+    class Meta:
+        managed = False  # tells Django not to create/migrate this table
+        db_table = 'useraverage'  # this must match your MariaDB table name exactly

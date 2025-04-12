@@ -15,5 +15,5 @@ urlpatterns = [
     path('updatepage/', updatepage, name='updatepage'),
     path('signup/', signup_view, name='signup'),
     path('test/', views.test_view, name='test'),
-    
+    path('leaderboard/', views.leaderboard_view, name='leaderboard_view'),
 ]
